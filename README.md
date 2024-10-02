@@ -34,13 +34,13 @@ npm install appschema
 
 ## Directory Structure
 
-```
+```sh
 lib/
   ├── index.ts         # Entry point
   ├── connection.ts    # Appwrite connection handling
   ├── model.ts         # Model definition and schema validation
   ├── query.ts         # Fluent query builder
-  └── repository.ts    # CRUD operations
+  ├── repository.ts    # CRUD operations
   └── schema.ts        # Schema validation logic
 ```
 
@@ -48,7 +48,7 @@ lib/
 
 ### Initialize Appwrite Connection
 
-```
+```javascript
 const { AppwriteConnection } = require('appschema');
 
 const endpoint = '<https://your-appwrite-server.com/v1>';
@@ -108,7 +108,7 @@ const userModel = new Model(userSchema, 'your-collection-id', 'your-database-id'
 
 ### Perform DAL operations
 
-```
+```javascript
 const { Repository } = require('appschema');
 
 // Create a repository for the User model
@@ -129,7 +129,7 @@ userRepository.create(newUser).then((document) => {
 
 Note: This is not in production currently.
 
-```
+```javascript
 const { QueryBuilder } = require('appschema');
 
 // Build a query to find users older than 20
