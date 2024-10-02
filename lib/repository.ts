@@ -1,8 +1,9 @@
-import { Databases } from 'appwrite';
+import { Databases, Models } from 'appwrite';
 import { Model } from './model';
 import AppwriteConnection from './connection';
 
-export class Repository<T> {
+
+export class Repository<T extends Record<string, any>> {
     private model: Model<T>;
     private database: Databases;
 
@@ -21,8 +22,8 @@ export class Repository<T> {
         );
     }
 
-    async findById(documentId: string) {
-        return await this.database.getDocument<T>(
+    async findById(documentId: string): Promise<Models.Document> {
+        return await this.database.getDocument<Models.Document>(
             this.model.getDatabaseId(),
             this.model.getCollectionId(),
             documentId
@@ -30,7 +31,7 @@ export class Repository<T> {
     }
 
     async update(documentId: string, data: Partial<T>) {
-        this.model.validate(data as T);
+        this.model.validate(data as T); // Ensure data is validated
         return await this.database.updateDocument(
             this.model.getDatabaseId(),
             this.model.getCollectionId(),
