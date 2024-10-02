@@ -2,7 +2,8 @@
   "name": "appschema",
   "version": "1.0.0",
   "description": "ODM for AppWrite DB",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest"
