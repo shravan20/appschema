@@ -1,2 +1,2 @@
-# appschema
+# AppSchema
 ODM for AppWrite DB
