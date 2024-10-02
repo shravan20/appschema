@@ -37,7 +37,6 @@ export class Model<T extends Record<string, any>> { // Ensure T is an object
         return this.databaseId;
     }
 
-    // CRUD Operations
     async createDocument(documentId: string, data: Omit<T, '$id' | '$createdAt' | '$updatedAt' | '$permissions' | '$read' | '$write'>): Promise<AppwriteModels.Document> {
         let validateData = JSON.parse(JSON.stringify(data));
         this.validate(validateData); // Validate the data against the schema
