@@ -35,7 +35,7 @@ npm install appschema
 ## Directory Structure
 
 ```
-src/
+lib/
   ├── index.ts         # Entry point
   ├── connection.ts    # Appwrite connection handling
   ├── model.ts         # Model definition and schema validation
