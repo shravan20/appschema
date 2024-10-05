@@ -1,4 +1,4 @@
-import { Databases, Models } from 'appwrite';
+import { Databases, Models } from 'node-appwrite';
 import { Model } from './model';
 import AppwriteConnection from './connection';
 
@@ -45,6 +45,14 @@ export class Repository<T extends Record<string, any>> {
             this.model.getDatabaseId(),
             this.model.getCollectionId(),
             documentId
+        );
+    }
+
+    async findAll(limit: number = 50, queries?: string[]): Promise<Models.DocumentList<Models.Document>> {
+        return await this.database.listDocuments(
+            this.model.getDatabaseId(),
+            this.model.getCollectionId(),
+            queries
         );
     }
 }

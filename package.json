@@ -12,8 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/shravan20/appschema.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "appwrite",
+    "object-data-mapper",
+    "schema"
+  ],
+  "author": "@shravan20",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/shravan20/appschema/issues"
@@ -21,7 +25,7 @@
   "homepage": "https://github.com/shravan20/appschema#readme",
   "dependencies": {
     "ajv": "^8.17.1",
-    "appwrite": "^15.0.0"
+    "node-appwrite": "^14.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",
