@@ -1,6 +1,10 @@
 import Ajv, { JSONSchemaType } from 'ajv';
 import { default as AppwriteConnection } from './connection';
-import { Databases, Models as AppwriteModels } from 'appwrite';
+import { Databases, Models as AppwriteModels } from 'node-appwrite';
+import { ValidationError } from './errors/validation-error';
+import { AttributeHandling } from './data-definition/attribute-handling'; // Updated import
+import { AttributeHandlingMode } from './data-definition/attribute-handling-mode';
+import { DefaultAttribute } from './types/default-attribute';
 
 const ajv = new Ajv();
 
@@ -9,13 +13,16 @@ export class Model<T extends Record<string, any>> { // Ensure T is an object
     private collectionId: string;
     private databaseId: string;
     private database: Databases;
+    private attributeHandling: AttributeHandling;
 
-    constructor(schema: JSONSchemaType<T>, collectionId: string, databaseId: string) {
+
+    constructor(schema: JSONSchemaType<T>, collectionId: string, databaseId: string,
+        attributeHandling: AttributeHandling = new AttributeHandling(AttributeHandlingMode.DO_NOT_CREATE)) {
         this.schema = schema;
         this.collectionId = collectionId;
         this.databaseId = databaseId;
+        this.attributeHandling = attributeHandling;
 
-        // Initialize Appwrite Databases
         const client = AppwriteConnection.getClient(); // Get Appwrite client
         this.database = new Databases(client);
     }
@@ -24,7 +31,7 @@ export class Model<T extends Record<string, any>> { // Ensure T is an object
         const validate = ajv.compile(this.schema);
         const valid = validate(data);
         if (!valid) {
-            throw new Error(`Schema validation error: ${JSON.stringify(validate.errors)}`);
+            throw new ValidationError(`Schema validation error: ${JSON.stringify(validate.errors)}`);
         }
         return true;
     }
@@ -35,6 +42,15 @@ export class Model<T extends Record<string, any>> { // Ensure T is an object
 
     getDatabaseId(): string {
         return this.databaseId;
+    }
+
+    private generateDefaultAttributes(data: Partial<T>): Partial<T> {
+        const defaultAttributes: Partial<DefaultAttribute> = {
+            $createdAt: new Date().toISOString(),
+            $updatedAt: new Date().toISOString(),
+        };
+
+        return { ...defaultAttributes, ...data };
     }
 
     async createDocument(documentId: string, data: Omit<T, '$id' | '$createdAt' | '$updatedAt' | '$permissions' | '$read' | '$write'>): Promise<AppwriteModels.Document> {
@@ -55,4 +71,5 @@ export class Model<T extends Record<string, any>> { // Ensure T is an object
     async deleteDocument(documentId: string): Promise<{}> {
         return await this.database.deleteDocument(this.databaseId, this.collectionId, documentId);
     }
+
 }
