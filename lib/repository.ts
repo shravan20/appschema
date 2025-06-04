@@ -31,7 +31,7 @@ export class Repository<T extends Record<string, any>> {
     }
 
     async update(documentId: string, data: Partial<T>) {
-        this.model.validate(data as T); // Ensure data is validated
+        this.model.validatePartial(data); // Validate partial data
         return await this.database.updateDocument(
             this.model.getDatabaseId(),
             this.model.getCollectionId(),
