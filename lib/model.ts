@@ -29,6 +29,17 @@ export class Model<T extends Record<string, any>> { // Ensure T is an object
         return true;
     }
 
+    validatePartial(data: Partial<T>): boolean {
+        const partialSchema: any = { ...this.schema };
+        delete partialSchema.required;
+        const validate = ajv.compile(partialSchema);
+        const valid = validate(data);
+        if (!valid) {
+            throw new Error(`Schema validation error: ${JSON.stringify(validate.errors)}`);
+        }
+        return true;
+    }
+
     getCollectionId(): string {
         return this.collectionId;
     }
@@ -48,7 +59,7 @@ export class Model<T extends Record<string, any>> { // Ensure T is an object
     }
 
     async updateDocument(documentId: string, data: Partial<T>): Promise<AppwriteModels.Document> {
-        this.validate(data as T); // Validate the data against the schema
+        this.validatePartial(data); // Validate partial data against the schema
         return await this.database.updateDocument(this.databaseId, this.collectionId, documentId, data);
     }
 
